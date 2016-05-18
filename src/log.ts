@@ -1,11 +1,11 @@
 ///<reference path="../typings/browser.d.ts"/>
 import DefaultStyler from './DefaultStyler'
 
-export interface LogStyler {
+export interface ILogStyler {
 	(logFn,name,level,...args):void
 }
 
-let styler:LogStyler = DefaultStyler
+let styler:ILogStyler = DefaultStyler
 
 /**
  * Log level values
@@ -168,6 +168,10 @@ export function setLoggerFactory(newLoggerFactory:ILoggerFactory) {
 
 export function setLoggerOutput(newLoggerOutput:ILogger) {
 	loggerOutput = newLoggerOutput
+}
+
+export function setStyler(newStyler:ILogStyler) {
+	styler = newStyler
 }
 
 export function create(name:string) {

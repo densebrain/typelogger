@@ -1,8 +1,9 @@
 {
   "name": "typelogger",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A simply typed logger for typescript",
-  "main": "index.js",
+  "main": "dist/log.js",
+  "typings": "dist/log.d.ts",
   "scripts": {
     "test": "echo funny"
   },
