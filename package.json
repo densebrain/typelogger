@@ -1,11 +1,12 @@
 {
   "name": "typelogger",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A simply typed logger for typescript",
-  "main": "dist/log.js",
-  "typings": "dist/log.d.ts",
+  "main": "dist/index.js",
+  "typings": "dist/index.d.ts",
   "scripts": {
-    "test": "echo funny"
+    "test-tdd": "mocha -w -r source-map-support/register -r dist/test/test-setup dist/**/*.spec.js",
+    "test": "mocha --reporter mocha-junit-reporter -r source-map-support/register -r dist/test/test-setup dist/**/*.spec.js"
   },
   "repository": {
     "type": "git",
@@ -13,6 +14,9 @@
   },
   "keywords": [
     "typescript"
+  ],
+  "files": [
+    "dist"
   ],
   "author": "Jonathan Glanz",
   "license": "MIT",
@@ -24,8 +28,10 @@
     "chalk": "^1.1.3"
   },
   "devDependencies": {
-    "expectations": "^0.6.0",
+    "chai": "^3.5.0",
     "mocha": "^2.4.5",
+    "mocha-junit-reporter": "^1.11.1",
+    "sinon": "^1.17.4",
     "source-map-support": "^0.4.0",
     "typescript": "^1.9.0-dev.20160518-1.0"
   }

@@ -1,4 +1,3 @@
-///<reference path="../typings/browser.d.ts"/>
 import DefaultStyler from './DefaultStyler'
 
 export interface ILogStyler {
@@ -24,7 +23,8 @@ export enum LogLevel {
  *
  * @type {boolean}
  */
-export let colorEnabled = true
+let stylerEnabled = true
+
 
 
 
@@ -89,23 +89,27 @@ function parseLogLevel(level:string) {
  * @param level
  * @param args
  */
-function log(name,level, ...args) {
+function log(name,level, ...args):void {
 	if (parseLogLevel(level) < logThreshold)
 		return
 
 	const logOut = loggerOutput as any
-	const logFns = [logOut[level],logOut.log,logOut]
+	const logFns = [
+		logOut[level] ? logOut[level].bind(logOut) : null,
+		logOut.log ? logOut.log.bind(logOut) : null,
+		logOut
+	]
 	let logFn = null
 	for (logFn of logFns) {
 		if (logFn && typeof logFn === 'function')
 			break
 	}
 
-	if (!logFn)
+	if (!logFn) {
 		throw new Error('Logger output can not be null')
+	}
 
-	debugger
-	(colorEnabled && styler) ?
+	(stylerEnabled && styler) ?
 		styler(logFn,name,level,...args) :
 		logFn(`[${name}] [${level.toUpperCase()}]`,...args)
 }
@@ -172,6 +176,14 @@ export function setLoggerOutput(newLoggerOutput:ILogger) {
 
 export function setStyler(newStyler:ILogStyler) {
 	styler = newStyler
+}
+
+export function getStyler() {
+	return styler
+}
+
+export function setStylerEnabled(enabled:boolean) {
+	stylerEnabled = enabled
 }
 
 export function create(name:string) {
