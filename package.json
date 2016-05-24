@@ -1,12 +1,12 @@
 {
     "name": "typelogger",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "A simply typed logger for typescript",
     "main": "dist/index.js",
     "typings": "dist/index.d.ts",
     "scripts": {
-        "test-tdd": "mocha -w -r source-map-support/register -r dist/test/test-setup dist/**/*.spec.js",
-        "test": "mocha --reporter mocha-junit-reporter -r source-map-support/register -r dist/test/test-setup dist/**/*.spec.js"
+        "test-tdd": "gulp tdd",
+        "test": "gulp test"
     },
     "repository": {
         "type": "git",
