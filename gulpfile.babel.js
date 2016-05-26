@@ -8,5 +8,5 @@ Object.assign(global, {
 
 
 // Include typeproject
-require('typeproject/gulpfile.babel')
+require('./node_modules/typeproject/gulpfile.babel')
 
