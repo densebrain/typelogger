@@ -1,7 +1,7 @@
 /**
  * All log functions
  */
-import * as Log from './log'
+import * as Log from './TypeLogger'
 
 /**
  * The default styler with chalk
@@ -11,7 +11,7 @@ import DefaultStyler from './DefaultStyler'
 /**
  * Export all functions from ./log
  */
-export * from './log'
+export * from './TypeLogger'
 
 /**
  * Shortcut to Log.create

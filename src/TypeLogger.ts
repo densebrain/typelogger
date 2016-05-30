@@ -26,8 +26,6 @@ export enum LogLevel {
 let stylerEnabled = true
 
 
-
-
 /**
  * Logger interface
  *
@@ -61,6 +59,18 @@ export interface ILoggerFactory {
 
 let logThreshold = LogLevel.DEBUG
 
+export type CategoryLevels = {[name:string]:LogLevel}
+
+const categoryLevels = {} as CategoryLevels
+
+export function setCategoryLevels(newLevels:CategoryLevels) {
+	Object.assign(categoryLevels,newLevels)
+}
+
+export function categoryLevel(name:string):number {
+	return categoryLevels[name] || 0
+}
+
 export function setLogThreshold(level:LogLevel) {
 	logThreshold = level
 }
@@ -90,7 +100,10 @@ function parseLogLevel(level:string) {
  * @param args
  */
 function log(name,level, ...args):void {
-	if (parseLogLevel(level) < logThreshold)
+	const msgLevel = parseLogLevel(level)
+	const catLevel = categoryLevel(name)
+	
+	if ((catLevel > 0 && msgLevel < catLevel) || (msgLevel < logThreshold))
 		return
 
 	const logOut = loggerOutput as any
@@ -127,7 +140,7 @@ export const DefaultLoggerFactory = {
 	 * @param name
 	 * @returns {ILogger}
 	 */
-		create(name:string):ILogger {
+	create(name:string):ILogger {
 		name = name.split('/').pop().split('.').shift()
 
 		/**
