@@ -23,7 +23,7 @@ export enum LogLevel {
  *
  * @type {boolean}
  */
-let stylerEnabled = true
+let stylerEnabled = false// true
 
 
 /**
@@ -102,7 +102,7 @@ function parseLogLevel(level:string) {
 function log(name,level, ...args):void {
 	const msgLevel = parseLogLevel(level)
 	const catLevel = categoryLevel(name)
-	
+
 	if ((catLevel > 0 && msgLevel < catLevel) || (msgLevel < logThreshold))
 		return
 
