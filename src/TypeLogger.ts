@@ -92,6 +92,12 @@ function parseLogLevel(level:string) {
 	return logLevel
 }
 
+function formatValue(value) {
+	const valueType = typeof value
+	return (['number','string','boolean'].indexOf(valueType) > -1) ?
+		value : JSON.stringify(value,null,4)
+}
+
 /**
  * Generic log action
  *
@@ -108,7 +114,7 @@ function log(name,level, ...args):void {
 
 	const logOut = loggerOutput as any
 	const logFns = [
-		logOut[level] ? logOut[level].bind(logOut) : null,
+		logOut[level] ? (...msgArgs) => { logOut[level](...msgArgs) } : null,
 		logOut.log ? logOut.log.bind(logOut) : null,
 		logOut
 	]
@@ -122,9 +128,18 @@ function log(name,level, ...args):void {
 		throw new Error('Logger output can not be null')
 	}
 
-	(stylerEnabled && styler) ?
+	const textMsg = formatValue(args.shift())
+
+	stylerEnabled && styler ?
 		styler(logFn,name,level,...args) :
-		logFn(`[${name}] [${level.toUpperCase()}]`,...args)
+		//logFn(`[${name}] [${level.toUpperCase()}]`,...args)
+		logFn(`[${name}] [${level.toUpperCase()}] ${textMsg}` +
+			((args.length === 0) ? '' : args.reduce((outMsg,nextPart) => {
+				// if (nextPart === null || typeof nextPath === 'undefined')
+				// 	return
+				outMsg = (outMsg.length) ? outMsg + ', ' : ''
+				return outMsg + formatValue(nextPart)
+			}),''))
 }
 
 /**
