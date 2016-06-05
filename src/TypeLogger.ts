@@ -1,5 +1,10 @@
 import DefaultStyler from './DefaultStyler'
 
+declare global {
+	var TypeLoggerCategories:any
+}
+
+
 export interface ILogStyler {
 	(logFn,name,level,...args):void
 }
@@ -10,13 +15,13 @@ let styler:ILogStyler = DefaultStyler
  * Log level values
  */
 export enum LogLevel {
-	TRACE,
-	DEBUG,
-	INFO,
-	WARN,
-	ERROR
-
+	TRACE = 1,
+	DEBUG = 2,
+	INFO = 3,
+	WARN = 4,
+	ERROR = 5
 }
+
 
 /**
  * Enabled colored output
@@ -57,7 +62,6 @@ export interface ILoggerFactory {
 	create(name:string):ILogger
 }
 
-let logThreshold = LogLevel.DEBUG
 
 export type CategoryLevels = {[name:string]:LogLevel}
 
@@ -66,6 +70,15 @@ const categoryLevels = {} as CategoryLevels
 export function setCategoryLevels(newLevels:CategoryLevels) {
 	Object.assign(categoryLevels,newLevels)
 }
+
+// Load any existing levels
+const g:any = (typeof window !== 'undefined') ? window : (typeof global !== 'undefined') ? global : null
+if (g && g.TypeLoggerCategories) {
+	setCategoryLevels(g.TypeLoggerCategories)
+}
+
+let logThreshold = g.TypeLoggerDefaultLevel || LogLevel.DEBUG
+
 
 export function categoryLevel(name:string):number {
 	return categoryLevels[name] || 0
@@ -109,7 +122,7 @@ function log(name,level, ...args):void {
 	const msgLevel = parseLogLevel(level)
 	const catLevel = categoryLevel(name)
 
-	if ((catLevel > 0 && msgLevel < catLevel) || (msgLevel < logThreshold))
+	if ((catLevel > 0 && msgLevel < catLevel) || (catLevel < 1 && msgLevel < logThreshold))
 		return
 
 	const logOut = loggerOutput as any
@@ -133,13 +146,14 @@ function log(name,level, ...args):void {
 	stylerEnabled && styler ?
 		styler(logFn,name,level,...args) :
 		//logFn(`[${name}] [${level.toUpperCase()}]`,...args)
-		logFn(`[${name}] [${level.toUpperCase()}] ${textMsg}` +
-			((args.length === 0) ? '' : args.reduce((outMsg,nextPart) => {
-				// if (nextPart === null || typeof nextPath === 'undefined')
-				// 	return
-				outMsg = (outMsg.length) ? outMsg + ', ' : ''
-				return outMsg + formatValue(nextPart)
-			}),''))
+		logFn(`[${name}] [${level.toUpperCase()}] ${textMsg}`,...args)
+		// +
+		// 	((args.length === 0) ? '' : args.reduce((outMsg,nextPart) => {
+		// 		// if (nextPart === null || typeof nextPath === 'undefined')
+		// 		// 	return
+		// 		outMsg = (outMsg.length) ? outMsg + ', ' : ''
+		// 		return outMsg + formatValue(nextPart)
+		// 	}),''))
 }
 
 /**
