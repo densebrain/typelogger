@@ -1,5 +1,6 @@
 import DefaultStyler from './DefaultStyler'
 
+
 declare global {
 	var TypeLoggerCategories:any
 }

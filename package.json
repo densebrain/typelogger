@@ -1,64 +1,63 @@
 {
-  "name": "typelogger",
-  "version": "1.0.4",
-  "description": "A simply typed logger for typescript",
-  "main": "dist/index.js",
-  "typings": "dist/index.d.ts",
-  "scripts": {
-    "test-tdd": "gulp tdd",
-    "test": "gulp test"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+ssh://git@github.com/densebrain/typelogger.git"
-  },
-  "keywords": [
-    "typescript"
-  ],
-  "files": [
-    "dist"
-  ],
-  "author": "Jonathan Glanz",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/densebrain/typelogger/issues"
-  },
-  "homepage": "https://github.com/densebrain/typelogger#readme",
-  "dependencies": {
-    "chalk": "^1.1.3",
-    "source-map-support": "^0.4.0"
-  },
-  "devDependencies": {
-    "babel-core": "^6.9.0",
-    "babel-register": "^6.9.0",
-    "commander": "^2.9.0",
-    "glob": "^7.0.3",
-    "inquirer": "^1.0.2",
-    "lodash": "^4.13.1",
-    "shelljs": "^0.7.0",
-    "winston": "^2.2.0",
-    "del": "^2.2.0",
-    "gulp-babel": "^6.1.2",
-    "gulp-debug": "^2.1.2",
-    "gulp-git": "^1.7.1",
-    "gulp-mocha": "^2.2.0",
-    "gulp-sourcemaps": "^1.6.0",
-    "gulp-typescript": "^2.13.4",
-    "gulp-util": "^3.0.7",
-    "merge2": "^1.0.2",
-    "run-sequence": "^1.2.0",
-    "semver": "^5.1.0",
-
-    "babel-preset-es2015": "^6.9.0",
-    "babel-preset-stage-0": "^6.5.0",
-    "babel-preset-stage-1": "^6.5.0",
-    "chai": "^3.5.0",
-    "gulp": "^3.9.1",
-    "mocha": "^2.4.5",
-    "mocha-junit-reporter": "^1.11.1",
-    "sinon": "^1.17.4",
-    "source-map-support": "^0.4.0",
-    "typeproject": "^1.0.19",
-    "typescript": "^1.9.0-dev.20160601-1.0"
-  }
+    "name": "typelogger",
+    "version": "1.0.5",
+    "description": "A simply typed logger for typescript",
+    "main": "dist/index.js",
+    "typings": "dist/index.d.ts",
+    "scripts": {
+        "test-tdd": "gulp tdd",
+        "test": "gulp test"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+ssh://git@github.com/densebrain/typelogger.git"
+    },
+    "keywords": [
+        "typescript"
+    ],
+    "files": [
+        "dist"
+    ],
+    "author": "Jonathan Glanz",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/densebrain/typelogger/issues"
+    },
+    "homepage": "https://github.com/densebrain/typelogger#readme",
+    "dependencies": {
+        "chalk": "^1.1.3",
+        "source-map-support": "^0.4.0"
+    },
+    "devDependencies": {
+        "babel-core": "^6.9.0",
+        "babel-register": "^6.9.0",
+        "commander": "^2.9.0",
+        "glob": "^7.0.3",
+        "inquirer": "^1.0.2",
+        "lodash": "^4.13.1",
+        "shelljs": "^0.7.0",
+        "winston": "^2.2.0",
+        "del": "^2.2.0",
+        "gulp-babel": "^6.1.2",
+        "gulp-debug": "^2.1.2",
+        "gulp-git": "^1.7.1",
+        "gulp-mocha": "^2.2.0",
+        "gulp-sourcemaps": "^1.6.0",
+        "gulp-typescript": "^2.13.4",
+        "gulp-util": "^3.0.7",
+        "merge2": "^1.0.2",
+        "run-sequence": "^1.2.0",
+        "semver": "^5.1.0",
+        "babel-preset-es2015": "^6.9.0",
+        "babel-preset-stage-0": "^6.5.0",
+        "babel-preset-stage-1": "^6.5.0",
+        "chai": "^3.5.0",
+        "gulp": "^3.9.1",
+        "mocha": "^2.4.5",
+        "mocha-junit-reporter": "^1.11.1",
+        "sinon": "^1.17.4",
+        "source-map-support": "^0.4.0",
+        "typeproject": "^1.0.19",
+        "typescript": "^1.9.0-dev.20160601-1.0"
+    }
 }
