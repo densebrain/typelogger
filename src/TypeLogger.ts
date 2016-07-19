@@ -112,6 +112,65 @@ function formatValue(value) {
 		value : JSON.stringify(value,null,4)
 }
 
+function getProp(obj,keyPath) {
+	if (!obj)
+		return null
+
+	const keyParts = keyPath.split('.')
+	const key = keyParts.shift()
+
+	const val = obj[key]
+
+	return (keyParts.length) ? getProp(val,keyParts.join('.')) : val
+}
+
+
+// Does process object exist
+const hasProcess = typeof process === 'undefined'
+
+// If in development env then add a few helpers
+if (hasProcess && getProp(process,'env.NODE_ENV') === 'development') {
+	Object.assign(global as any, {
+		debugCat(cat:string) {
+			process.env.LOG_DEBUG = (process.env.LOG_DEBUG || '') + ',' + cat
+		}
+	})
+}
+
+/**
+ * Is debuging enabled for a category
+ * based on comma delimited string
+ *
+ * @param envVal
+ * @param name
+ * @param delimiter
+ * @returns {boolean}
+ */
+function stringIncludes(envVal:string,name:string,delimiter:string = ','):boolean {
+	return (!envVal) ? false :
+		envVal
+			.split(delimiter)
+			.map(val => val.toLowerCase())
+			.includes(name.toLowerCase())
+}
+
+/**
+ * Check if a category has debugging
+ *
+ * @param name
+ * @returns {boolean}
+ */
+function checkDebug(name:string):boolean {
+	if (!hasProcess)
+		return false
+
+	const envDEBUG = getProp(process,'env.DEBUG'),
+		envLOG_DEBUG = getProp(process,'env.LOG_DEBUG') || ''
+
+
+	return stringIncludes(envDEBUG,name) || stringIncludes(envLOG_DEBUG,name)
+}
+
 /**
  * Generic log action
  *
@@ -120,6 +179,9 @@ function formatValue(value) {
  * @param args
  */
 function log(name,level, ...args):void {
+	const debugEnabled = checkDebug(name)
+
+
 	const msgLevel = parseLogLevel(level)
 	const catLevel = categoryLevel(name)
 
