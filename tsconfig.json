@@ -1,6 +1,13 @@
 {
 	"compilerOptions": {
-		"target": "es6",
+		"target": "ES6",
+		"lib": [
+			"es7",
+			"es2015",
+			"es2016",
+			"es2017",
+			"dom"
+		],
 		"module": "commonjs",
 		"moduleResolution": "node",
 		"declaration": true,
@@ -10,17 +17,16 @@
 		"allowSyntheticDefaultImports": true,
 		"sourceMap": true,
 		"inlineSourceMap": true,
-		"baseUrl": "./",
+		"baseUrl": "./src",
 		"outDir": "dist",
 		"paths": {
-			"typelogger": ["./src/index"],
-			"typelogger/*": ["./src/*"]
+			"typelogger": ["./index"],
+			"typelogger/*": ["./*"]
 		}
 	},
 	"exclude": [
 		"node_modules",
-		"typings/main.d.ts",
-		"typings/main",
-		"dist"
+		"dist",
+		"target"
 	]
 }
