@@ -1,5 +1,3 @@
-///<reference path="../typings/TypeLogger.d.ts"/>
-
 import DefaultStyler from './DefaultStyler'
 
 
