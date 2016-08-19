@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-- '6.1'
+- '6.3'
 before_script:
 - npm install -g gulp babel-register source-map-support
 dd:
@@ -12,5 +12,6 @@ deploy:
     secure: Ap7/R/j3JmendAovJtsDQeP6o1LUKkMKrIIaXOaTBjyNtLS2KNowBKaGx/7yhZVh3RqHGiFNOG7OABYnN565yFmVIuaFNHI27DgnXu2dOR6scuQ53fjF+aIqY/NVhpm55PCIYIYF6VEHKA63Qsi0ou33VHalwfws5ViEbS3lWUWar2CjBaFIxLQUpsFqIaBJ65gg342mFOPiC1JFcI0reorCGH/nVVSZTsIEIXmhoYGCxcjOGs3ynAwvV+acJnB5LDfoHcnSD4c7lEiHMZ2Q8pSTFFujxqI4C4vE0T0aOWRLs+kwcridwpiGmqaR1xK2hMBvGe7irov/lOyxZ35HTTy6x1vyd49b5qWviNAfjZJ8/dgpkHa7TVfm/bAIsK2Bk22C46poGHpVxJWKd3AWinwYN8AYv1JvwPFYbvbLXzKH4OZVFiaQy88EIJp1P3uLV1k5j5sPVGrnS9pVP+k0NpoGZAJYainDFLsz3WrSxV9g+bF9GHt3+iAoHNR6O8GHA89LTEcnpP6Kih+bDDNko1vWVsS5W6ZccZ8rsAHwSfWVGNq4XU213CHrz20TVGb0UMdwuywJEzpi1gp0kvjz2LxV/S2BdjIIS/AMvj4fv/hdgM3/EJ8uM5uhc8wuLXbDMe/862LNIEr33Fv7JKnDIqyHQq7FDPYO5BJjYppMUdI=
   on:
     branch: master
-    repo: densebrain/typelogger
-#    tags: true
+    tags: true
+#    repo: densebrain/typelogger
+

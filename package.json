@@ -65,8 +65,8 @@
     "shelljs": "^0.7.0",
     "sinon": "^1.17.4",
     "source-map-support": "^0.4.0",
-    "winston": "^2.2.0",
-    "typescript": "^2.1.0-dev.20160710"
+    "typescript": "^2.1.0-dev.20160805",
+    "winston": "^2.2.0"
   },
   "peerDependencies": {
     "typescript": "^2.1.0-dev.20160710"

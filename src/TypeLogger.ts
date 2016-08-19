@@ -13,6 +13,14 @@ export interface ILogStyler {
 
 let styler:ILogStyler = DefaultStyler
 
+
+/**
+ * Log level names
+ *
+ * @type {(string|string|string|string)[]}
+ */
+const LogLevelNames = ['debug','info','warn','error']
+
 /**
  * Log level values
  */
@@ -244,8 +252,7 @@ export const DefaultLoggerFactory = {
 		const logger = {}
 
 		// Create levels
-		const levels = ['debug','info','warn','error']
-		levels.forEach((level) => {
+		LogLevelNames.forEach((level) => {
 			/**
 			 * (description)
 			 *
@@ -286,6 +293,28 @@ export function setStyler(newStyler:ILogStyler) {
 
 export function getStyler() {
 	return styler
+}
+
+/**
+ * Wrap a logger and prepend all log calls
+ *
+ * @param logger
+ */
+export function setPrefix(logger:ILogger,prefix:string):ILogger {
+	
+	const newLogger = {}
+	LogLevelNames.forEach((level) => {
+		/**
+		 * (description)
+		 *
+		 * @param args (description)
+		 */
+		newLogger[level] = (...args) => {
+			return logger[level](prefix,...args)
+		}
+	})
+	
+	return newLogger as ILogger
 }
 
 export function setStylerEnabled(enabled:boolean) {
