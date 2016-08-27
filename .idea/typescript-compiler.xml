@@ -3,6 +3,7 @@
   <component name="TypeScriptCompiler">
     <option name="isCompilerEnabled" value="true" />
     <option name="typeScriptServiceDirectory" value="$PROJECT_DIR$/node_modules/typescript/lib" />
+    <option name="nodeInterpreterTextField" value="$PROJECT_DIR$/../../../nvm-home/versions/node/v6.3.0/bin/node" />
     <option name="scopeName" value="TypeScript Source" />
     <option name="useConfig" value="true" />
     <option name="useService" value="true" />

@@ -13,6 +13,7 @@ export interface ILogStyler {
 
 let styler:ILogStyler = DefaultStyler
 
+let globalPrefix:string = ""
 
 /**
  * Log level names
@@ -216,9 +217,9 @@ function log(name,level, ...args):void {
 	const textMsg = formatValue(args.shift())
 
 	stylerEnabled && styler ?
-		styler(logFn,name,level,...args) :
+		styler(logFn,`${globalPrefix || ""}${name}`,level,...args) :
 		//logFn(`[${name}] [${level.toUpperCase()}]`,...args)
-		logFn(`[${name}] [${level.toUpperCase()}] ${textMsg}`,...args)
+		logFn(`${globalPrefix || ""}[${name}] [${level.toUpperCase()}] ${textMsg}`,...args)
 		// +
 		// 	((args.length === 0) ? '' : args.reduce((outMsg,nextPart) => {
 		// 		// if (nextPart === null || typeof nextPath === 'undefined')
@@ -296,9 +297,19 @@ export function getStyler() {
 }
 
 /**
+ * Global prefix for all loggers
+ *
+ * @param prefix
+ */
+export function setPrefixGlobal(prefix:string) {
+	globalPrefix = prefix
+}
+
+/**
  * Wrap a logger and prepend all log calls
  *
  * @param logger
+ * @param prefix
  */
 export function setPrefix(logger:ILogger,prefix:string):ILogger {
 	
