@@ -28,7 +28,6 @@
   "homepage": "https://github.com/densebrain/typelogger#readme",
   "dependencies": {
     "chalk": "^1.1.3",
-    "typeproject": "^1.0.19",
     "source-map-support": "^0.4.0"
   },
   "devDependencies": {
@@ -66,7 +65,9 @@
     "semver": "^5.1.0",
     "shelljs": "^0.7.0",
     "sinon": "^1.17.4",
+    "source-map-loader": "^0.1.5",
     "source-map-support": "^0.4.0",
+    "typeproject": "^1.0.19",
     "typescript": ">=2.0.0",
     "winston": "^2.2.0"
   }
