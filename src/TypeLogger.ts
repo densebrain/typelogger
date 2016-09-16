@@ -3,7 +3,7 @@ import DefaultStyler from './DefaultStyler'
 
 
 declare global {
-	var TypeLoggerCategories:any
+	let TypeLoggerCategories:any
 }
 
 
@@ -164,38 +164,50 @@ function stringIncludes(envVal:string,name:string,delimiter:string = ','):boolea
 			.includes(name.toLowerCase())
 }
 
-/**
- * Check if a category has debugging
- *
- * @param name
- * @returns {boolean}
- */
-function checkDebug(name:string):boolean {
-	if (!hasProcess)
-		return false
+// /**
+//  * Check if a category has debugging
+//  *
+//  * @param name
+//  * @returns {boolean}
+//  */
+// function checkDebug(name:string):boolean {
+// 	if (!hasProcess)
+// 		return false
+//
+// 	const envDEBUG = getProp(process,'env.DEBUG'),
+// 		envLOG_DEBUG = getProp(process,'env.LOG_DEBUG') || ''
+//
+//
+// 	return stringIncludes(envDEBUG,name) || stringIncludes(envLOG_DEBUG,name)
+// }
 
-	const envDEBUG = getProp(process,'env.DEBUG'),
-		envLOG_DEBUG = getProp(process,'env.LOG_DEBUG') || ''
+const overrideLevels = {} as any
 
-
-	return stringIncludes(envDEBUG,name) || stringIncludes(envLOG_DEBUG,name)
+export function setOverrideLevel(logger:ILogger,overrideLevel:LogLevel) {
+	overrideLevels[logger as any] = overrideLevel
 }
 
 /**
  * Generic log action
  *
+ * @param logger
  * @param name
  * @param level
  * @param args
  */
-function log(name,level, ...args):void {
-	const debugEnabled = checkDebug(name)
+function log(logger:ILogger,name,level, ...args):void {
+	let
+		overrideLevel = overrideLevels[logger as any]
+	
+	if (typeof overrideLevel !== 'number')
+		overrideLevel = -1
+		
+	const
+		// debugEnabled = checkDebug(name),
+		msgLevel = parseLogLevel(level),
+		catLevel = categoryLevel(name)
 
-
-	const msgLevel = parseLogLevel(level)
-	const catLevel = categoryLevel(name)
-
-	if ((catLevel > 0 && msgLevel < catLevel) || (catLevel < 1 && msgLevel < logThreshold))
+	if (overrideLevel > msgLevel || (overrideLevel === -1 && ((catLevel > 0 && msgLevel < catLevel) || (catLevel < 1 && msgLevel < logThreshold))))
 		return
 
 	const logOut = loggerOutput as any
@@ -214,19 +226,12 @@ function log(name,level, ...args):void {
 		throw new Error('Logger output can not be null')
 	}
 
-	const textMsg = formatValue(args.shift())
+	const
+		textMsg = formatValue(args.shift())
 
 	stylerEnabled && styler ?
 		styler(logFn,`${globalPrefix || ""}${name}`,level,...args) :
-		//logFn(`[${name}] [${level.toUpperCase()}]`,...args)
 		logFn(`${globalPrefix || ""}[${name}] [${level.toUpperCase()}] ${textMsg}`,...args)
-		// +
-		// 	((args.length === 0) ? '' : args.reduce((outMsg,nextPart) => {
-		// 		// if (nextPart === null || typeof nextPath === 'undefined')
-		// 		// 	return
-		// 		outMsg = (outMsg.length) ? outMsg + ', ' : ''
-		// 		return outMsg + formatValue(nextPart)
-		// 	}),''))
 }
 
 /**
@@ -245,26 +250,14 @@ export const DefaultLoggerFactory = {
 	create(name:string):ILogger {
 		name = name.split('/').pop().split('.').shift()
 
-		/**
-		 * (description)
-		 *
-		 * @param level (description)
-		 */
-		const logger = {}
-
 		// Create levels
-		LogLevelNames.forEach((level) => {
-			/**
-			 * (description)
-			 *
-			 * @param args (description)
-			 */
+		return LogLevelNames.reduce((logger,level) => {
 			logger[level] = (...args) => {
-				log(name,level,...args)
+				log(this,name,level,...args)
 			}
-		})
-
-		return logger as ILogger
+			
+			return logger
+		},{}) as any
 
 	}
 }

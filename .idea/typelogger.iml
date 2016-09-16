@@ -9,12 +9,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="lodash-DefinitelyTyped" level="application" />
-    <orderEntry type="library" name="mocha-DefinitelyTyped" level="application" />
     <orderEntry type="library" name="node_modules" level="project" />
     <orderEntry type="library" name="tsconfig$roots" level="project" />
     <orderEntry type="module-library">
-      <library name="PHP Runtime" type="php">
+      <library name="PHP Runtime">
         <CLASSES>
           <root url="jar://$APPLICATION_PLUGINS_DIR$/php/lib/php.jar!/stubs" />
         </CLASSES>
