@@ -49,6 +49,7 @@ let stylerEnabled = false// true
  * @interface ILogger
  */
 export interface ILogger {
+	name:string
 	debug:(...args) => void
 	info:(...args) => void
 	warn:(...args) => void
@@ -102,7 +103,14 @@ export function setLogThreshold(level:LogLevel) {
 /**
  * Current logger output
  */
-let loggerOutput:ILogger = console
+let loggerOutput:ILogger = new Proxy(console,{
+	get(target,prop) {
+		if (prop === 'name' && !(target as any).name)
+			return 'console'
+		
+		return target[prop]
+	}
+}) as any
 
 function parseLogLevel(level:string) {
 	let logLevel:any = LogLevel.DEBUG
@@ -184,7 +192,7 @@ function stringIncludes(envVal:string,name:string,delimiter:string = ','):boolea
 const overrideLevels = {} as any
 
 export function setOverrideLevel(logger:ILogger,overrideLevel:LogLevel) {
-	overrideLevels[logger as any] = overrideLevel
+	overrideLevels[logger.name] = overrideLevel
 }
 
 /**
@@ -197,7 +205,7 @@ export function setOverrideLevel(logger:ILogger,overrideLevel:LogLevel) {
  */
 function log(logger:ILogger,name,level, ...args):void {
 	let
-		overrideLevel = overrideLevels[logger as any]
+		overrideLevel = overrideLevels[logger.name]
 	
 	if (typeof overrideLevel !== 'number')
 		overrideLevel = -1
@@ -253,11 +261,11 @@ export const DefaultLoggerFactory = {
 		// Create levels
 		return LogLevelNames.reduce((logger,level) => {
 			logger[level] = (...args) => {
-				log(this,name,level,...args)
+				log(logger as any,name,level,...args)
 			}
 			
 			return logger
-		},{}) as any
+		},{name}) as any
 
 	}
 }
