@@ -54,6 +54,8 @@ export interface ILogger {
 	info:(...args) => void
 	warn:(...args) => void
 	error:(...args) => void
+	
+	setOverrideLevel:(level:LogLevel) => void
 }
 
 
@@ -257,15 +259,26 @@ export const DefaultLoggerFactory = {
 	 */
 	create(name:string):ILogger {
 		name = name.split('/').pop().split('.').shift()
-
+		
+		const
+			logger:ILogger = {name} as any
+			
 		// Create levels
-		return LogLevelNames.reduce((logger,level) => {
+		LogLevelNames.reduce((logger,level) => {
 			logger[level] = (...args) => {
 				log(logger as any,name,level,...args)
 			}
 			
 			return logger
-		},{name}) as any
+		},logger)
+		
+		// ADD THE OVERRIDE FUNCTION
+		logger.setOverrideLevel = (level:LogLevel) => {
+			setOverrideLevel(logger,level)
+		}
+	
+		
+		return logger
 
 	}
 }
@@ -314,7 +327,9 @@ export function setPrefixGlobal(prefix:string) {
  */
 export function setPrefix(logger:ILogger,prefix:string):ILogger {
 	
-	const newLogger = {}
+	const
+		newLogger = Object.assign({},logger)
+	
 	LogLevelNames.forEach((level) => {
 		/**
 		 * (description)
