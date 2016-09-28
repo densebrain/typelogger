@@ -1,6 +1,6 @@
 {
   "name": "typelogger",
-  "version": "1.0.23",
+  "version": "1.0.24",
   "description": "A simply typed logger for typescript",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -66,7 +66,7 @@
     "sinon": "^1.17.4",
     "source-map-loader": "^0.1.5",
     "source-map-support": "^0.4.0",
-		"typeproject": "^1.0.19",
+    "typeproject": "^1.0.19",
     "typescript": ">=2.0.0",
     "winston": "^2.2.0"
   }
