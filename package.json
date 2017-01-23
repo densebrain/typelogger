@@ -5,8 +5,8 @@
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "test:tdd": "gulp tdd",
-    "test": "gulp test",
+    "test:tdd": "jest --watch",
+    "test": "jest",
     "clean": "rm -Rf dist",
     "compile": "tsc --project tsconfig.json",
     "compile:watch": "tsc --project tsconfig.json --watch",
