@@ -1,17 +1,18 @@
+import 'jest'
 import * as TypeLogger from "../index"
 
 const Log = TypeLogger
 
-describe('#logger',() => {
+test('#logger',() => {
 	let log = null
 
 	beforeEach(() => {
-		log = Log.create(__filename)
+		log = Log.create("test")
 	})
 
 	it('#creates',() => {
 
-		expect(log).to.not.be.null
+		expect(log).not.toBeNull()
 		log.info('test output')
 	})
 	
@@ -23,12 +24,12 @@ describe('#logger',() => {
 	// 	expect(stylerSpy.calledOnce).to.be.true
 	// })
 
-	it('#not-styled',() => {
-		const stylerSpy = sinon.spy(TypeLogger.getStyler())
-		TypeLogger.setStyler(stylerSpy)
-		TypeLogger.setStylerEnabled(false)
-		log.info('testing for spy styling')
-
-		expect(stylerSpy.calledOnce).to.be.false
-	})
+	// it('#not-styled',() => {
+	// 	const stylerSpy = sinon.spy(TypeLogger.getStyler())
+	// 	TypeLogger.setStyler(stylerSpy)
+	// 	TypeLogger.setStylerEnabled(false)
+	// 	log.info('testing for spy styling')
+	//
+	// 	expect(stylerSpy.calledOnce).to.be.false
+	// })
 })
