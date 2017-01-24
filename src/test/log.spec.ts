@@ -7,7 +7,7 @@ test('#logger',() => {
 	let log = null
 
 	beforeEach(() => {
-		log = Log.create("test")
+		log = Log.create(__filename)
 	})
 
 	it('#creates',() => {

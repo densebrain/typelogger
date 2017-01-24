@@ -1,37 +1,16 @@
 
 import DefaultStyler from './DefaultStyler'
+import {warnLog, getProp, parseLogLevel, formatValue} from './Util'
+import { ILogStyler, TCategoryLevels, LogLevel, ILogger, LogLevelNames, ILoggerFactory } from "./Types"
 
 
-declare global {
-	let TypeLoggerCategories:any
-}
 
 
-export interface ILogStyler {
-	(logFn,name,level,...args):void
-}
 
-let styler:ILogStyler = DefaultStyler
+let
+	styler:ILogStyler = DefaultStyler,
+	globalPrefix:string = ""
 
-let globalPrefix:string = ""
-
-/**
- * Log level names
- *
- * @type {(string|string|string|string)[]}
- */
-const LogLevelNames = ['debug','info','warn','error']
-
-/**
- * Log level values
- */
-export enum LogLevel {
-	TRACE = 1,
-	DEBUG = 2,
-	INFO = 3,
-	WARN = 4,
-	ERROR = 5
-}
 
 
 /**
@@ -39,65 +18,47 @@ export enum LogLevel {
  *
  * @type {boolean}
  */
-let stylerEnabled = false// true
-
-
-/**
- * Logger interface
- *
- * @export
- * @interface ILogger
- */
-export interface ILogger {
-	name:string
-	debug:(...args) => void
-	info:(...args) => void
-	warn:(...args) => void
-	error:(...args) => void
-	
-	setOverrideLevel:(level:LogLevel) => void
-}
-
+let
+	stylerEnabled = false// true
 
 /**
- * Create logger instances for output
+ * Store explicit category levels
  *
- * @export
- * @interface ILoggerFactory
+ * @type {TCategoryLevels}
  */
-export interface ILoggerFactory {
-	/**
-	 * Return a new logger for the supplied
-	 * name/category
-	 *
-	 * @param {string} name (description)
-	 * @returns {ILogger} (description)
-	 */
-	create(name:string):ILogger
-}
+const
+	categoryLevels = {} as TCategoryLevels
 
-
-export type CategoryLevels = {[name:string]:LogLevel}
-
-const categoryLevels = {} as CategoryLevels
-
-export function setCategoryLevels(newLevels:CategoryLevels) {
+export function setCategoryLevels(newLevels:TCategoryLevels) {
 	Object.assign(categoryLevels,newLevels)
 }
 
 // Load any existing levels
-const g:any = (typeof window !== 'undefined') ? window : (typeof global !== 'undefined') ? global : null
+const
+	g:any = (typeof window !== 'undefined') ? window : (typeof global !== 'undefined') ? global : null
+
 if (g && g.TypeLoggerCategories) {
 	setCategoryLevels(g.TypeLoggerCategories)
 }
 
-let logThreshold = g.TypeLoggerDefaultLevel || LogLevel.DEBUG
+let
+	logThreshold = g.TypeLoggerDefaultLevel || LogLevel.DEBUG
 
-
+/**
+ * Get the category level
+ *
+ * @param name
+ * @returns {LogLevel|number}
+ */
 export function categoryLevel(name:string):number {
 	return categoryLevels[name] || 0
 }
 
+/**
+ * Set global threshold
+ *
+ * @param level
+ */
 export function setLogThreshold(level:LogLevel) {
 	logThreshold = level
 }
@@ -114,51 +75,25 @@ let loggerOutput:ILogger = new Proxy(console,{
 	}
 }) as any
 
-function parseLogLevel(level:string) {
-	let logLevel:any = LogLevel.DEBUG
-	try {
-		logLevel = LogLevel[level.toUpperCase() as any]
-	} catch (err) {
-		console.warn(`Failed to parse log level ${level}`,err)
-		logLevel = LogLevel.DEBUG
-	}
-
-	return logLevel
-}
-
-function formatValue(value) {
-	const valueType = typeof value
-	return (['number','string','boolean'].indexOf(valueType) > -1) ?
-		value : JSON.stringify(value,null,4)
-}
-
-function getProp(obj,keyPath) {
-	if (!obj)
-		return null
-
-	const keyParts = keyPath.split('.')
-	const key = keyParts.shift()
-
-	const val = obj[key]
-
-	return (keyParts.length) ? getProp(val,keyParts.join('.')) : val
-}
-
-
 // Does process object exist
-const hasProcess = typeof process === 'undefined'
+const
+	hasProcess = typeof process === 'undefined'
 
 // If in development env then add a few helpers
 if (hasProcess && getProp(process,'env.NODE_ENV') === 'development') {
 	Object.assign(global as any, {
 		debugCat(cat:string) {
-			process.env.LOG_DEBUG = (process.env.LOG_DEBUG || '') + ',' + cat
+			try {
+				process.env.LOG_DEBUG = (process.env.LOG_DEBUG || '') + ',' + cat
+			} catch (err) {
+				warnLog(`Failed to set cat debugging: ${cat}`,err)
+			}
 		}
 	})
 }
 
 /**
- * Is debuging enabled for a category
+ * Is debugging enabled for a category
  * based on comma delimited string
  *
  * @param envVal
@@ -191,8 +126,15 @@ function stringIncludes(envVal:string,name:string,delimiter:string = ','):boolea
 // 	return stringIncludes(envDEBUG,name) || stringIncludes(envLOG_DEBUG,name)
 // }
 
-const overrideLevels = {} as any
+const
+	overrideLevels = {} as any
 
+/**
+ * Set an override threshold for a logger
+ *
+ * @param logger
+ * @param overrideLevel
+ */
 export function setOverrideLevel(logger:ILogger,overrideLevel:LogLevel) {
 	overrideLevels[logger.name] = overrideLevel
 }
@@ -220,13 +162,17 @@ function log(logger:ILogger,name,level, ...args):void {
 	if (overrideLevel > msgLevel || (overrideLevel === -1 && ((catLevel > 0 && msgLevel < catLevel) || (catLevel < 1 && msgLevel < logThreshold))))
 		return
 
-	const logOut = loggerOutput as any
-	const logFns = [
-		logOut[level] ? (...msgArgs) => { logOut[level](...msgArgs) } : null,
-		logOut.log ? logOut.log.bind(logOut) : null,
-		logOut
-	]
-	let logFn = null
+	const
+		logOut = loggerOutput as any,
+		logFns = [
+			logOut[level] ? (...msgArgs) => { logOut[level](...msgArgs) } : null,
+			logOut.log ? logOut.log.bind(logOut) : null,
+			logOut
+		]
+	
+	let
+		logFn = null
+	
 	for (logFn of logFns) {
 		if (logFn && typeof logFn === 'function')
 			break
@@ -239,9 +185,11 @@ function log(logger:ILogger,name,level, ...args):void {
 	const
 		textMsg = formatValue(args.shift())
 
-	stylerEnabled && styler ?
-		styler(logFn,`${globalPrefix || ""}${name}`,level,...args) :
-		logFn(`${globalPrefix || ""}[${name}] [${level.toUpperCase()}] ${textMsg}`,...args)
+	if (stylerEnabled && styler) {
+		styler(logFn, `${globalPrefix || ""}${name}`, level, ...args)
+	} else {
+		logFn(`${globalPrefix || ""}[${name}] [${level.toUpperCase()}] ${textMsg}`, ...args)
+	}
 }
 
 /**
@@ -298,14 +246,29 @@ export function setLoggerFactory(newLoggerFactory:ILoggerFactory) {
 	loggerFactory = newLoggerFactory
 }
 
+/**
+ * Set the logger output
+ *
+ * @param newLoggerOutput
+ */
 export function setLoggerOutput(newLoggerOutput:ILogger) {
 	loggerOutput = newLoggerOutput
 }
 
+/**
+ * Set the styler
+ *
+ * @param newStyler
+ */
 export function setStyler(newStyler:ILogStyler) {
 	styler = newStyler
 }
 
+/**
+ * Get the current styler
+ *
+ * @returns {ILogStyler}
+ */
 export function getStyler() {
 	return styler
 }
@@ -344,10 +307,21 @@ export function setPrefix(logger:ILogger,prefix:string):ILogger {
 	return newLogger as ILogger
 }
 
+/**
+ * Set custom styler enabled
+ *
+ * @param enabled
+ */
 export function setStylerEnabled(enabled:boolean) {
 	stylerEnabled = enabled
 }
 
+/**
+ * Create a new logger
+ *
+ * @param name
+ * @returns {ILogger}
+ */
 export function create(name:string) {
 	return loggerFactory.create(name)
 }
