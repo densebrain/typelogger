@@ -9,6 +9,11 @@ import * as Log from './Logger'
 export * from './Logger'
 
 /**
+ * Export all required types
+ */
+export * from "./Types"
+
+/**
  * The default styler with chalk
  */
 import DefaultStyler from './DefaultStyler'

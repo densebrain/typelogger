@@ -4,13 +4,9 @@ import {warnLog, getProp, parseLogLevel, formatValue} from './Util'
 import { ILogStyler, TCategoryLevels, LogLevel, ILogger, LogLevelNames, ILoggerFactory } from "./Types"
 
 
-
-
-
 let
 	styler:ILogStyler = DefaultStyler,
 	globalPrefix:string = ""
-
 
 
 /**
