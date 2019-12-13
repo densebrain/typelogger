@@ -16,7 +16,7 @@ export * from "./Types"
 /**
  * The default styler with chalk
  */
-import DefaultStyler from './DefaultStyler'
+export {styler as DefaultStyler} from './DefaultStyler'
 
 
 /**
@@ -26,10 +26,6 @@ import DefaultStyler from './DefaultStyler'
  */
 export const getLogger = Log.create
 
-/**
- * Export the default styler
- */
-export { DefaultStyler }
 
 /**
  * By default export Log manager

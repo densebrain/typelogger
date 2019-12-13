@@ -50,7 +50,7 @@ let styles = {
  * @param level
  * @param args
  */
-export default function styler(logFn,name,level,...args) {
+export function styler(logFn,name,level,...args) {
 	let msg = styles[level].name(`[${name}] `) +
 		styles[level].level(`[${level.toUpperCase()}]`)
 
